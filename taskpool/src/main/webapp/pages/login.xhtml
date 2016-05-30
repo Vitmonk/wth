@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Warehouse Task Helper</title>
+
+	<meta name="_csrf" content="${_csrf.token}" />
+	<meta name="_csrf_header" content="${_csrf.headerName}" />
+
+	<link rel="icon" type="image/x-icon"
+		href="../assets/static/favicon.ico" />
+	<ui:param name="root" value="#{request.contextPath}/" />
+	<meta http-equiv="X-UA-Compatible" content="EmulateIE8" />
+	<meta content='text/html; charset=UTF-8' http-equiv="Content-Type" />
+</h:head>
+<h:body>
+	<p:layout style="min-width:400px; min-height:300px;">
+
+		<p:layoutUnit position="center" size="300">
+			<h:form id="loginForm" prependId="false"
+				action="${request.contextPath}/login" method="POST">
+
+				<h:panelGrid id="loginFormGrid" columns="2" cellpadding="5">
+					<h2>Login</h2>
+					<h:outputLabel value="" />
+
+
+					<p:outputLabel for="username" value="Username:" />
+					<p:inputText id="username" label="Username" />
+
+					<p:outputLabel for="password" value="Password:" />
+					<p:password id="password" label="Password"/>
+
+					<h:outputLabel value=" "
+						rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}" />
+					<h:outputLabel value="Benutzername oder Kennwort ist falsch!"
+						rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}"
+						style="color: red" />
+
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+					<p:commandButton type="submit" update="loginFormGrid" value="Login"
+						ajax="false" />
+				</h:panelGrid>
+			</h:form>
+		</p:layoutUnit>
+
+	</p:layout>
+</h:body>
+</html>

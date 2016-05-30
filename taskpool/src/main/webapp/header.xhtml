@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+<body>
+	<ui:composition>
+		<h:form>
+			<p:growl id="messages" />
+			<p:toolbar>
+				<f:facet name="left">
+					<p:button outcome="/pages/home.xhtml" value="Home">
+					</p:button>
+				</f:facet>
+
+				<f:facet name="right">
+					<p:commandButton type="submit" value="Logout"
+						onclick="javascript:window.location.href='${request.contextPath}/logout'; return false;">
+					</p:commandButton>
+					<!-- <p:menuButton value="Options">
+						<p:menuitem value="Save" actionListener="#{toolbarView.save}"
+							update="messages" icon="ui-icon-disk" />
+						<p:menuitem value="Update" actionListener="#{toolbarView.update}"
+							update="messages" icon="ui-icon-arrowrefresh-1-w" />
+						<p:menuitem value="Delete" actionListener="#{toolbarView.delete}"
+							ajax="false" icon="ui-icon-close" />
+						<p:menuitem value="Homepage" url="http://www.primefaces.org"
+							icon="ui-icon-extlink" />
+					</p:menuButton>
+					 -->
+				</f:facet>
+			</p:toolbar>
+		</h:form>
+	</ui:composition>
+</body>
+</html>
