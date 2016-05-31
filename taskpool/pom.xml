@@ -6,7 +6,6 @@
 	<groupId>de.hsb.hci.wth</groupId>
 	<artifactId>taskpool</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
 
 	<name>taskpool</name>
 	<description>HCI Project: Warehouse Task Helper</description>

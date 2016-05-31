@@ -13,11 +13,11 @@ public class JSFContextParametersConfiguration implements ServletContextInitiali
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
-
+        System.out.println("Initialising jsf dev parameters...");
         servletContext.setInitParameter("javax.faces.DEFAULT_SUFFIX", ".xhtml");
-        servletContext.setInitParameter("javax.faces.PARTIAL_STATE_SAVING_METHOD", "true");
+        servletContext.setInitParameter("javax.faces.PARTIAL_STATE_SAVING_METHOD", Boolean.TRUE.toString().toLowerCase());
         servletContext.setInitParameter("javax.faces.PROJECT_STAGE", "Development");
-        servletContext.setInitParameter("facelets.DEVELOPMENT", "true");
+        servletContext.setInitParameter("facelets.DEVELOPMENT", Boolean.TRUE.toString().toLowerCase());
         servletContext.setInitParameter("javax.faces.FACELETS_REFRESH_PERIOD", "1");
 
     }

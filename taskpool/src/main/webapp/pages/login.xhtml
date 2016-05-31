@@ -29,12 +29,11 @@
 					<h2>Login</h2>
 					<h:outputLabel value="" />
 
+					<p:outputLabel for="username" value="Benutzername:" />
+					<p:inputText id="username" label="Benutzername" />
 
-					<p:outputLabel for="username" value="Username:" />
-					<p:inputText id="username" label="Username" />
-
-					<p:outputLabel for="password" value="Password:" />
-					<p:password id="password" label="Password"/>
+					<p:outputLabel for="password" value="Kennwort:" />
+					<p:password id="password" label="Kennwort"/>
 
 					<h:outputLabel value=" "
 						rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}" />

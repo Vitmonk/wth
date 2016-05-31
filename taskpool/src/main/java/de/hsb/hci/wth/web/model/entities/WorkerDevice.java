@@ -1,4 +1,4 @@
-package de.hsb.hci.wth.web.data.entities;
+package de.hsb.hci.wth.web.model.entities;
 
 public class WorkerDevice {
 

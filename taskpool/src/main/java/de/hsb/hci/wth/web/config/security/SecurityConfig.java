@@ -33,20 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .invalidateHttpSession(true)
                 .and().csrf();
-        /*
-         * // pages to secure
-         * .antMatchers("/pages/**").hasRole("USER")
-         * // login configuration
-         * .and().formLogin()
-         * .loginPage("/pages/login.xhtml").permitAll()
-         * .loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password")
-         * .defaultSuccessUrl("/pages/home.xhtml").failureUrl("/pages/login.xhtml?error")
-         * // logout configuration
-         * .and().logout()
-         * .logoutUrl("/logout").logoutSuccessUrl("/pages/login.xhtml")
-         * .invalidateHttpSession(true)
-         * .and().csrf();
-         */
     }
 
     @Autowired
