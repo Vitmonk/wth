@@ -22,31 +22,32 @@
 	<p:layout style="min-width:400px; min-height:300px;">
 
 		<p:layoutUnit position="center" size="300">
-			<h:form id="loginForm" prependId="false"
-				action="${request.contextPath}/login" method="POST">
+			<center>
+				<h:form id="loginForm" prependId="false"
+					action="${request.contextPath}/login" method="POST">
 
-				<h:panelGrid id="loginFormGrid" columns="2" cellpadding="5">
 					<h2>Login</h2>
-					<h:outputLabel value="" />
+					<h:panelGrid id="loginFormGrid" columns="2" cellpadding="5">
 
-					<p:outputLabel for="username" value="Benutzername:" />
-					<p:inputText id="username" label="Benutzername" />
+						<p:outputLabel for="username" value="Benutzername:" />
+						<p:inputText id="username" label="Benutzername" />
 
-					<p:outputLabel for="password" value="Kennwort:" />
-					<p:password id="password" label="Kennwort"/>
+						<p:outputLabel for="password" value="Kennwort:" />
+						<p:password id="password" label="Kennwort" />
 
-					<h:outputLabel value=" "
-						rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}" />
-					<h:outputLabel value="Benutzername oder Kennwort ist falsch!"
-						rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}"
-						style="color: red" />
+						<h:outputLabel value=" "
+							rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}" />
+						<h:outputLabel value="Benutzername oder Kennwort ist falsch!"
+							rendered="${SPRING_SECURITY_LAST_EXCEPTION.message != null}"
+							style="color: red" />
 
-					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" />
-					<p:commandButton type="submit" update="loginFormGrid" value="Login"
-						ajax="false" />
-				</h:panelGrid>
-			</h:form>
+						<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
+					</h:panelGrid>
+					<p:commandButton type="submit" update="loginFormGrid"
+						value="Anmelden" ajax="false" />
+				</h:form>
+			</center>
 		</p:layoutUnit>
 
 	</p:layout>

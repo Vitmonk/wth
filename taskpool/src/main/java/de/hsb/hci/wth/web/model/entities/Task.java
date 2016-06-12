@@ -6,6 +6,7 @@ public class Task {
     private String name;
     private String description;
     private String packageCode;
+    private boolean completed = false;
 
     public Integer getId() {
         return id;
@@ -37,5 +38,13 @@ public class Task {
 
     public void setPackageCode(String packageCode) {
         this.packageCode = packageCode;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

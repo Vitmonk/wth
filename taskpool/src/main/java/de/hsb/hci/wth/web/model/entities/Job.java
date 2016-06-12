@@ -7,8 +7,11 @@ public class Job {
 
     private Integer id;
     private String name;
-    private String shortDescription;
+    private String description;
     private List<Task> tasks = new ArrayList<>();
+    private Device currentDevice;
+    private List<Message> messages = new ArrayList<>();
+    private boolean locked = false;
 
     public Integer getId() {
         return id;
@@ -26,12 +29,12 @@ public class Job {
         this.name = name;
     }
 
-    public String getShortDescription() {
-        return shortDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setShortDescription(String shortDescription) {
-        this.shortDescription = shortDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Task> getTasks() {
@@ -40,5 +43,29 @@ public class Job {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Device getCurrentDevice() {
+        return currentDevice;
+    }
+
+    public void setCurrentDevice(Device currentDevice) {
+        this.currentDevice = currentDevice;
+    }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 }

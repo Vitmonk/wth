@@ -1,0 +1,6 @@
+/*
+*	Text size for all gui elements.
+*/
+.ui-widget {
+    font-size: 14px;
+}

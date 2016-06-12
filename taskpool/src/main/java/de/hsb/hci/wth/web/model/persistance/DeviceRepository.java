@@ -2,17 +2,17 @@ package de.hsb.hci.wth.web.model.persistance;
 
 import java.util.List;
 
-import de.hsb.hci.wth.web.model.entities.Job;
+import de.hsb.hci.wth.web.model.entities.Device;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class JobRepository {
+public class DeviceRepository {
 
     @Autowired
-    private DemoDB demoDb;
+    private DemoDB demoDB;
 
-    public List<Job> getAllJobs() {
-        return demoDb.getJobs();
+    public List<Device> getAllDevices() {
+        return demoDB.getDevices();
     }
 }

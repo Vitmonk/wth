@@ -5,16 +5,82 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
 <h:body>
 	<ui:composition template="../layout.xhtml">
 		<ui:define name="content">
 			<div class="well well-lg">
-				<p:fieldset legend="System overview">
-					<center>
-						<img width="70"
-							src="http://www.primefaces.org/showcase/javax.faces.resource/main/images/logoBlue.svg.xhtml" />
-					</center>
+
+				<p:fieldset legend="Übersicht">
+					<p:panelGrid columns="2" layout="grid">
+						<h:form>
+							<p:dataTable var="job" value="#{overviewController.activeJobs}" styleClass="activeJobsTable"
+								rowIndexVar="activeJobRowIndex" style="margin-bottom:40px">
+								<f:facet name="header">
+						            Laufende Aufgaben
+						        </f:facet>
+								<p:column headerText="Name" sortBy="#{job.name}">
+									<h:outputText value="#{job.name}" />
+								</p:column>
+	
+								<p:column headerText="Gerät" sortBy="#{job.currentDevice.id}">
+									<h:outputText value="#{job.currentDevice.id}" />
+								</p:column>
+	
+								<p:column headerText="Zustand"
+									sortBy="#{jobHelper.getProgress(job)}">
+									<h:outputText value="#{jobHelper.getProgress(job)} % " />
+									<h:outputText id="jobInfo" styleClass="fa fa-info-circle jobInfoIcon#{activeJobRowIndex}">
+									</h:outputText>
+									<p:overlayPanel id="myPanel" for="jobInfo" 
+										showEvent="mouseover" hideEvent="mouseout" dynamic="true">
+									     <h:outputText value="Beschreibung:"
+											style="text-decoration: underline;" />
+										<br></br>
+										<h:outputText value="#{job.description}" />
+										<br></br>
+										<h:outputText value="Aktuelle Unteraufgabe:"
+											style="text-decoration: underline;" />
+										<br></br>
+										<h:outputText value="#{jobHelper.getCurrentTask(job).name}" />
+									</p:overlayPanel>
+									<!-- <p:tooltip for="@(.activeJobsTable .jobInfoIcon#{activeJobRowIndex})"
+									 		style="max-width: 300px;" myPosition="top right">
+										<h:outputText value="Beschreibung:"
+											style="text-decoration: underline;" />
+										<br></br><br></br>
+										<h:outputText value="#{job.description}" />
+										<br></br><br></br>
+										<h:outputText value="Aktuelle Unteraufgabe:"
+											style="text-decoration: underline;" />
+										<br></br><br></br>
+										<h:outputText value="#{jobHelper.getCurrentTask(job).name}" />
+									</p:tooltip> -->
+								</p:column>
+							</p:dataTable>
+							<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}" />
+						</h:form>
+						<h:form>
+							<p:dataTable var="job" value="#{overviewController.openJobs}"
+								style="margin-bottom:40px">
+								<f:facet name="header">
+						            Verfügbare Aufgaben
+						        </f:facet>
+								<p:column headerText="Name" sortBy="#{job.name}">
+									<h:outputText value="#{job.name}" />
+								</p:column>
+	
+								<p:column headerText="Beschreibung" sortBy="#{job.description}">
+									<h:outputText value="#{job.description}" />
+									<h:outputLabel icon="fa fa-plus" />
+								</p:column>
+							</p:dataTable>
+							<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}" />
+						</h:form>
+					</p:panelGrid>
 				</p:fieldset>
 			</div>
 		</ui:define>
