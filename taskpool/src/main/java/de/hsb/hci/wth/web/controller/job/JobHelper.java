@@ -11,23 +11,30 @@ public class JobHelper {
 
     public Integer getProgress(Job job) {
         Integer progress = 0;
-        List<Task> tasks = job.getTasks();
+        if (job != null) {
+            List<Task> tasks = job.getTasks();
 
-        Integer finished = (int) tasks.stream()
-                .filter(task -> task.isCompleted())
-                .count();
-        progress = (int) ((finished * 1.0 / tasks.size() * 1.0) * 100);
+            Integer finished = (int) tasks.stream()
+                    .filter(task -> task.isCompleted())
+                    .count();
+            progress = (int) ((finished * 1.0 / tasks.size() * 1.0) * 100);
+        }
 
         return progress;
     }
 
     public Task getCurrentTask(Job job) {
         Task currentTask = null;
-        List<Task> tasks = job.getTasks();
-        if (!tasks.isEmpty()) {
-            currentTask = tasks.stream()
-                    .filter(task -> !task.isCompleted())
-                    .findFirst().get();
+        if (job != null) {
+            List<Task> tasks = job.getTasks();
+            if (!tasks.isEmpty()) {
+                for (Task task : tasks) {
+                    if (!task.isCompleted()) {
+                        currentTask = task;
+                        break;
+                    }
+                }
+            }
         }
         return currentTask;
     }

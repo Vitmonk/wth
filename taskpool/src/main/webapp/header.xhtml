@@ -9,6 +9,7 @@
 	xmlns:p="http://primefaces.org/ui">
 <body>
 	<ui:composition>
+		<center><h1>Warehouse Task Helper</h1></center>
 		<h:form>
 			<p:growl id="messages" />
 			<p:toolbar>
@@ -16,8 +17,15 @@
 					<p:button outcome="/pages/home.xhtml" value="Übersicht">
 					</p:button>
 				</f:facet>
+				<f:facet name="left">
+					<p:button outcome="/pages/devices.xhtml" value="Aktive Geräte">
+					</p:button>
+				</f:facet>
 
 				<f:facet name="right">
+					<p:outputLabel>
+						Benutzer: admin 
+					</p:outputLabel>
 					<p:commandButton type="submit" value="Abmelden"
 						onclick="javascript:window.location.href='${request.contextPath}/logout'; return false;">
 					</p:commandButton>

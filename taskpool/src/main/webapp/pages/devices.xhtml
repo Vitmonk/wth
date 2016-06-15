@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="../layout.xhtml">
+		<ui:define name="content">
+			<div class="well well-lg">
+
+				<p:fieldset legend="Aktive Geräte">
+					<p:panelGrid columns="1" layout="grid">
+						<h:form>
+							<p:dataTable var="device" filterDelay="300"
+								value="#{devicesController.activeDevices}"
+								styleClass="activeDevicesTable" rows="10" paginator="true"
+								paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,25,50"
+								rowIndexVar="activeDeviceRowIndex" style="margin-bottom:40px">
+								<f:facet name="header">
+						            Geräte und deren Aktivität
+						        </f:facet>
+								<p:column headerText="ID" sortBy="#{device.id}"
+									filterBy="#{device.id}" filterMatchMode="contains">
+									<center>
+										<h:outputText value="#{device.id}" />
+									</center>
+								</p:column>
+								<p:column headerText="Letzte Aktivitätszeit"
+									sortBy="#{device.lastActive}">
+									<center>
+										<h:outputText value="#{device.lastActive}">
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+										</h:outputText>
+									</center>
+								</p:column>
+								<p:column headerText="Aktuelle Aufgabe"
+									sortBy="#{device.currentJob.name}">
+									<center>
+										<h:outputText value="#{device.currentJob.name} " />
+										<h:outputText
+											value="(#{jobHelper.getProgress(device.currentJob)}%) " />
+										<h:outputText id="jobInfoTable"
+											styleClass="fa fa-info-circle jobInfoIcon#{activeDeviceRowIndex}">
+										</h:outputText>
+										&nbsp;
+										<p:commandButton id="jobChange" title="Aufgabe ändern"
+											onclick="PF('dialogChangeJob').show(); #{changeJobDialogController.setDevice(device)};"
+											icon="fa fa-exchange"
+											styleClass=" jobChangeIcon#{activeDeviceRowIndex}">
+										</p:commandButton>
+									</center>
+
+									<p:overlayPanel id="jobInfoTableOverlayPanel"
+										for="jobInfoTable" showEvent="mouseover" hideEvent="mouseout"
+										dynamic="true">
+										<h:outputText value="Beschreibung:"
+											style="text-decoration: underline;" />
+										<br></br>
+										<h:outputText value="#{device.currentJob.description}" />
+										<br></br>
+										<h:outputText value="Aktuelle Unteraufgabe:"
+											style="text-decoration: underline;" />
+										<br></br>
+										<h:outputText
+											value="#{jobHelper.getCurrentTask(device.currentJob).name}" />
+									</p:overlayPanel>
+
+									<p:dialog header="Aufgabe ändern" widgetVar="dialogChangeJob"
+										modal="true" width="350px">
+										<h:outputLabel value="Verfügbare Aufgaben:" />
+										<br></br>
+										<br></br>
+										<p:selectOneListbox id="openJobsList"
+											converter="#{jobConverter}" style="width: 100%;"
+											value="#{changeJobDialogController.currentlyChosenJob}"
+											var="job" filter="true" filterMatchMode="contains">
+											<p:ajax update="jobChooseButton" />
+											<f:selectItems value="#{changeJobDialogController.openJobs}"
+												var="openJobSelect" itemLabel="#{openJobSelect.name}"
+												itemValue="#{openJobSelect}" />
+
+											<p:column>
+												<h:outputText value="#{job.name} " />
+												<h:outputText id="jobInfoDialog"
+													styleClass="fa fa-info-circle jobInfoIcon#{activeDeviceRowIndex}">
+												</h:outputText>
+											</p:column>
+
+											<p:overlayPanel id="jobInfoDialogOverlayPanel"
+												for="jobInfoDialog" showEvent="mouseover"
+												hideEvent="mouseout" dynamic="true">
+												<h:outputText value="Beschreibung:"
+													style="text-decoration: underline;" />
+												<br></br>
+												<h:outputText value="#{device.currentJob.description}" />
+												<br></br>
+												<h:outputText value="Unteraufgaben:"
+													style="text-decoration: underline;" />
+												<br></br>
+												<h:outputText
+													value="#{jobHelper.getCurrentTask(device.currentJob).name}" />
+											</p:overlayPanel>
+										</p:selectOneListbox>
+										<br></br>
+										<p:toolbar>
+											<f:facet name="left">
+												<p:commandButton id="jobDeleteButton"
+													value="Aktuelle wegnehmen" icon="fa fa-trash">
+												</p:commandButton>
+											</f:facet>
+											<f:facet name="right">
+												<p:commandButton id="jobChooseButton" value="Ändern"
+													disabled="#{changeJobDialogController.currentlyChosenJob eq null}"
+													onclick="#{changeJobDialogController.changeJob()}; PF('dialogChangeJob').hide();"
+													icon="fa fa-exchange">
+												</p:commandButton>
+											</f:facet>
+										</p:toolbar>
+									</p:dialog>
+
+								</p:column>
+								<p:column headerText="Weitere Aktionen">
+									<center>
+										<p:commandButton id="openChatButton"
+											title="Nachrichten anzeigen"
+											onclick="PF('dialogChangeJob').show();" icon="fa fa-wechat">
+										</p:commandButton>
+										<p:commandButton id="lockJobButton" title="Aufgabe sperren"
+											onclick="PF('dialogChangeJob').show();" icon="fa fa-lock">
+										</p:commandButton>
+									</center>
+								</p:column>
+							</p:dataTable>
+							<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}" />
+						</h:form>
+					</p:panelGrid>
+				</p:fieldset>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

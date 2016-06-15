@@ -15,27 +15,31 @@
 				<p:fieldset legend="Übersicht">
 					<p:panelGrid columns="2" layout="grid">
 						<h:form>
-							<p:dataTable var="job" value="#{overviewController.activeJobs}" styleClass="activeJobsTable"
-								rowIndexVar="activeJobRowIndex" style="margin-bottom:40px">
+							<p:dataTable var="job" value="#{overviewController.activeJobs}"
+								styleClass="activeJobsTable" rows="10" paginator="true" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15" rowIndexVar="activeJobRowIndex"
+								style="margin-bottom:40px">
 								<f:facet name="header">
 						            Laufende Aufgaben
 						        </f:facet>
 								<p:column headerText="Name" sortBy="#{job.name}">
 									<h:outputText value="#{job.name}" />
 								</p:column>
-	
+
 								<p:column headerText="Gerät" sortBy="#{job.currentDevice.id}">
 									<h:outputText value="#{job.currentDevice.id}" />
 								</p:column>
-	
+
 								<p:column headerText="Zustand"
 									sortBy="#{jobHelper.getProgress(job)}">
 									<h:outputText value="#{jobHelper.getProgress(job)} % " />
-									<h:outputText id="jobInfo" styleClass="fa fa-info-circle jobInfoIcon#{activeJobRowIndex}">
+									<h:outputText id="jobInfo"
+										styleClass="fa fa-info-circle jobInfoIcon#{activeJobRowIndex}">
 									</h:outputText>
-									<p:overlayPanel id="myPanel" for="jobInfo" 
+									<p:overlayPanel id="myPanel" for="jobInfo"
 										showEvent="mouseover" hideEvent="mouseout" dynamic="true">
-									     <h:outputText value="Beschreibung:"
+										<h:outputText value="Beschreibung:"
 											style="text-decoration: underline;" />
 										<br></br>
 										<h:outputText value="#{job.description}" />
@@ -64,6 +68,9 @@
 						</h:form>
 						<h:form>
 							<p:dataTable var="job" value="#{overviewController.openJobs}"
+								rows="10" paginator="true" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="5,10,15"
 								style="margin-bottom:40px">
 								<f:facet name="header">
 						            Verfügbare Aufgaben
@@ -71,7 +78,7 @@
 								<p:column headerText="Name" sortBy="#{job.name}">
 									<h:outputText value="#{job.name}" />
 								</p:column>
-	
+
 								<p:column headerText="Beschreibung" sortBy="#{job.description}">
 									<h:outputText value="#{job.description}" />
 									<h:outputLabel icon="fa fa-plus" />

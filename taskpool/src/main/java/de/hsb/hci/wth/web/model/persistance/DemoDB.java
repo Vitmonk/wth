@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.PostConstruct;
 
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DemoDB {
+
+    private static final int AMOUNT_OF_DUMMY_ENTRIES = 30;
 
     private static final Log LOGGER = LogFactory.getLog(DemoDB.class);
 
@@ -89,7 +92,7 @@ public class DemoDB {
         Job job4 = new Job();
         job4.setId(123);
         job4.setName("Transportvorbereitung XYZ");
-        job4.setDescription("Kiste XY mit Ersatzteilen Serie 600/700 soll zum Transporter gebracht werden.");
+        job4.setDescription("Kiste XYZ mit Ersatzteilen Serie 800 soll zum Transporter gebracht werden.");
         job4.getMessages().add(messageJob4Device4);
         job4.getTasks().add(job4task1);
         job4.getTasks().add(job4task2);
@@ -133,7 +136,59 @@ public class DemoDB {
         device4.setCurrentJob(job4);
         job4.setCurrentDevice(device4);
 
+        createDummyEntries();
+
         LOGGER.info("Initialisierung der Demo DB abgeschlossen.");
+    }
+
+    private void createDummyEntries() {
+        // Free
+        for (int i = 0; i < AMOUNT_OF_DUMMY_ENTRIES; i++) {
+            Job job = new Job();
+            job.setId(300 + i);
+            job.setName("Aufgabe " + 300 + i);
+            job.setDescription("Beschreibung " + i);
+            Task task = new Task();
+            task.setName("Let us dance =)");
+            task.setDescription("Unteraufgabe von Aufgabe " + i);
+            job.getTasks().add(task);
+
+            jobs.add(job);
+
+            Device device = new Device();
+            device.setId("WRK" + 300 + i);
+            Random random = new Random();
+            device.setLastActive(new GregorianCalendar(
+                    2016, Calendar.AUGUST, Calendar.TUESDAY,
+                    random.nextInt(24), random.nextInt(60), random.nextInt(60))
+                            .getTime());
+            devices.add(device);
+        }
+        // Assigned
+        for (int i = 0; i < AMOUNT_OF_DUMMY_ENTRIES; i++) {
+            Job job = new Job();
+            job.setId(400 + i);
+            job.setName("Aufgabe " + 400 + i);
+            job.setDescription("Beschreibung " + i);
+            Task task = new Task();
+            task.setName("Let us dance =)");
+            task.setDescription("Unteraufgabe von Aufgabe " + i);
+            job.getTasks().add(task);
+
+            jobs.add(job);
+
+            Device device = new Device();
+            device.setId("WRK" + 400 + i);
+            Random random = new Random();
+            device.setLastActive(new GregorianCalendar(
+                    2016, Calendar.AUGUST, Calendar.TUESDAY,
+                    random.nextInt(24), random.nextInt(60), random.nextInt(60))
+                            .getTime());
+            devices.add(device);
+
+            device.setCurrentJob(job);
+            job.setCurrentDevice(device);
+        }
     }
 
     public List<Device> getDevices() {
