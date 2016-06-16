@@ -147,10 +147,10 @@ public class DemoDB {
             Job job = new Job();
             job.setId(300 + i);
             job.setName("Aufgabe " + 300 + i);
-            job.setDescription("Beschreibung " + i);
+            job.setDescription("Beschreibung A" + 300 + i);
             Task task = new Task();
             task.setName("Let us dance =)");
-            task.setDescription("Unteraufgabe von Aufgabe " + i);
+            task.setDescription("Unteraufgabe von Aufgabe " + 300 + i);
             job.getTasks().add(task);
 
             jobs.add(job);
@@ -169,10 +169,10 @@ public class DemoDB {
             Job job = new Job();
             job.setId(400 + i);
             job.setName("Aufgabe " + 400 + i);
-            job.setDescription("Beschreibung " + i);
+            job.setDescription("Beschreibung A" + 400 + i);
             Task task = new Task();
             task.setName("Let us dance =)");
-            task.setDescription("Unteraufgabe von Aufgabe " + i);
+            task.setDescription("Unteraufgabe von Aufgabe " + 400 + i);
             job.getTasks().add(task);
 
             jobs.add(job);

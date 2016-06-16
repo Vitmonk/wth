@@ -30,8 +30,9 @@
 					action="${request.contextPath}/login" method="POST">
 
 					<h2>Login</h2>
+					<p:focus for="username" />
 					<h:panelGrid id="loginFormGrid" columns="2" cellpadding="5">
-
+						
 						<p:outputLabel for="username" value="Benutzername:" />
 						<p:inputText id="username" label="Benutzername" />
 

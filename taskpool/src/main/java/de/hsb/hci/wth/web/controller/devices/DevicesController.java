@@ -28,6 +28,14 @@ public class DevicesController {
                 .collect(Collectors.toList());
     }
 
+    public void lockDevice(Device device) {
+        device.setLocked(true);
+    }
+
+    public void unlockDevice(Device device) {
+        device.setLocked(false);
+    }
+
     public List<Device> getActiveDevices() {
         return activeDevices;
     }

@@ -14,11 +14,12 @@
 
 				<p:fieldset legend="Aktive Geräte">
 					<p:panelGrid columns="1" layout="grid">
-						<h:form>
+						<h:form id="activeDevicesForm">
 							<p:dataTable var="device" filterDelay="300"
+								id="activeDevicesTable"
 								value="#{devicesController.activeDevices}"
-								styleClass="activeDevicesTable" rows="10" paginator="true"
-								paginatorPosition="bottom"
+								emptyMessage="Keine gefunden.." styleClass="activeDevicesTable"
+								rows="10" paginator="true" paginatorPosition="bottom"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 								rowsPerPageTemplate="10,25,50"
 								rowIndexVar="activeDeviceRowIndex" style="margin-bottom:40px">
@@ -29,6 +30,12 @@
 									filterBy="#{device.id}" filterMatchMode="contains">
 									<center>
 										<h:outputText value="#{device.id}" />
+										&nbsp;
+										<h:outputLabel styleClass="fa fa-warning" rendered="#{device.locked}"
+										title="Gerät ist zur Zeit gesperrt!"></h:outputLabel>
+										&nbsp;
+										<h:outputLabel styleClass="fa fa-warning" rendered="#{device.currentJob.locked}"
+										title="Aufgabe ist zur Zeit gesperrt!"></h:outputLabel>
 									</center>
 								</p:column>
 								<p:column headerText="Letzte Aktivitätszeit"
@@ -50,7 +57,7 @@
 										</h:outputText>
 										&nbsp;
 										<p:commandButton id="jobChange" title="Aufgabe ändern"
-											onclick="PF('dialogChangeJob').show(); #{changeJobDialogController.setDevice(device)};"
+											onclick="PF('changeJobDialog#{activeDeviceRowIndex}').show(); #{changeJobDialogController.setDevice(device)};"
 											icon="fa fa-exchange"
 											styleClass=" jobChangeIcon#{activeDeviceRowIndex}">
 										</p:commandButton>
@@ -58,66 +65,69 @@
 
 									<p:overlayPanel id="jobInfoTableOverlayPanel"
 										for="jobInfoTable" showEvent="mouseover" hideEvent="mouseout"
-										dynamic="true">
+										showEffect="fade" hideEffect="fade" dynamic="true">
 										<h:outputText value="Beschreibung:"
-											style="text-decoration: underline;" />
+											style="text-decoration: underline; font-weight: bold;" />
 										<br></br>
 										<h:outputText value="#{device.currentJob.description}" />
 										<br></br>
 										<h:outputText value="Aktuelle Unteraufgabe:"
-											style="text-decoration: underline;" />
+											style="text-decoration: underline; font-weight: bold;" />
 										<br></br>
 										<h:outputText
 											value="#{jobHelper.getCurrentTask(device.currentJob).name}" />
 									</p:overlayPanel>
 
-									<p:dialog header="Aufgabe ändern" widgetVar="dialogChangeJob"
-										modal="true" width="350px">
+									<p:dialog id="changeJobDialog#{activeDeviceRowIndex}"
+										header="Aufgabe ändern (#{device.id})"
+										widgetVar="changeJobDialog#{activeDeviceRowIndex}"
+										showEffect="fade" hideEffect="fade" modal="true" width="370px">
 										<h:outputLabel value="Verfügbare Aufgaben:" />
 										<br></br>
 										<br></br>
-										<p:selectOneListbox id="openJobsList"
-											converter="#{jobConverter}" style="width: 100%;"
-											value="#{changeJobDialogController.currentlyChosenJob}"
-											var="job" filter="true" filterMatchMode="contains">
-											<p:ajax update="jobChooseButton" />
-											<f:selectItems value="#{changeJobDialogController.openJobs}"
-												var="openJobSelect" itemLabel="#{openJobSelect.name}"
-												itemValue="#{openJobSelect}" />
+										<p:dataTable id="openJobsTable#{activeDeviceRowIndex}"
+											widgetVar="openJobsTable#{activeDeviceRowIndex}"
+											var="openJob" selectionMode="single"
+											selection="#{changeJobDialogController.currentlyChosenJob}"
+											rowKey="#{openJob.id}" emptyMessage="Keine gefunden.."
+											rowIndexVar="openJobRowIndex"
+											value="#{changeJobDialogController.openJobs}"
+											scrollable="true" scrollHeight="150">
 
-											<p:column>
-												<h:outputText value="#{job.name} " />
-												<h:outputText id="jobInfoDialog"
-													styleClass="fa fa-info-circle jobInfoIcon#{activeDeviceRowIndex}">
+											<p:ajax event="rowSelect" update="@([id$=jobChooseButton])" />
+
+											<p:column id="openJobNameColumn" filterBy="#{openJob.name}"
+												filterMatchMode="contains">
+												<f:facet name="filter">
+													<p:inputText id="openJobNameColumnFilter"
+														style="width: 98%; float: left;"
+														onkeyup="PF('openJobsTable#{activeDeviceRowIndex}').filter();"
+														placeholder="Suche nach Namen..">
+													</p:inputText>
+												</f:facet>
+												<h:outputText value="#{openJob.name} " />
+												<h:outputText id="openJobInfo"
+													title="#{openJob.description}"
+													styleClass="fa fa-info-circle openJobInfoIcon#{openJobRowIndex}">
 												</h:outputText>
 											</p:column>
-
-											<p:overlayPanel id="jobInfoDialogOverlayPanel"
-												for="jobInfoDialog" showEvent="mouseover"
-												hideEvent="mouseout" dynamic="true">
-												<h:outputText value="Beschreibung:"
-													style="text-decoration: underline;" />
-												<br></br>
-												<h:outputText value="#{device.currentJob.description}" />
-												<br></br>
-												<h:outputText value="Unteraufgaben:"
-													style="text-decoration: underline;" />
-												<br></br>
-												<h:outputText
-													value="#{jobHelper.getCurrentTask(device.currentJob).name}" />
-											</p:overlayPanel>
-										</p:selectOneListbox>
+										</p:dataTable>
 										<br></br>
 										<p:toolbar>
 											<f:facet name="left">
+												<!-- TODO remove job -->
 												<p:commandButton id="jobDeleteButton"
-													value="Aktuelle wegnehmen" icon="fa fa-trash">
+													widgetVar="jobDeleteButtonWidget"
+													value="Aktuelle wegnehmen"
+													onclick="PF('changeJobDialog#{activeDeviceRowIndex}').hide();"
+													icon="fa fa-trash">
 												</p:commandButton>
 											</f:facet>
 											<f:facet name="right">
+												<!-- TODO #{changeJobDialogController.changeJob()};  -->
 												<p:commandButton id="jobChooseButton" value="Ändern"
 													disabled="#{changeJobDialogController.currentlyChosenJob eq null}"
-													onclick="#{changeJobDialogController.changeJob()}; PF('dialogChangeJob').hide();"
+													onclick="PF('changeJobDialog#{activeDeviceRowIndex}').hide();"
 													icon="fa fa-exchange">
 												</p:commandButton>
 											</f:facet>
@@ -129,12 +139,64 @@
 									<center>
 										<p:commandButton id="openChatButton"
 											title="Nachrichten anzeigen"
-											onclick="PF('dialogChangeJob').show();" icon="fa fa-wechat">
+											onclick="PF('messagesDialog#{activeDeviceRowIndex}').show();"
+											icon="fa fa-wechat">
 										</p:commandButton>
-										<p:commandButton id="lockJobButton" title="Aufgabe sperren"
-											onclick="PF('dialogChangeJob').show();" icon="fa fa-lock">
+										<p:commandButton id="lockDeviceButton" title="Gerät sperren"
+											rendered="#{not device.locked}"
+											actionListener="#{devicesController.lockDevice(device)}" update="@([id$=activeDevicesTable])"
+											icon="fa fa-lock">
+											<p:confirm header="Gerät #{device.id} sperren"
+												message="Sind Sie sicher?" icon="ui-icon-alert" />
+										</p:commandButton>
+										<p:commandButton id="unlockDeviceButton" title="Gerät entsperren"
+											rendered="#{device.locked}"
+											actionListener="#{devicesController.unlockDevice(device)}" update="@([id$=activeDevicesTable])"
+											icon="fa fa-unlock">
 										</p:commandButton>
 									</center>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Ja" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Nein" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+									<p:dialog id="messagesDialog#{activeDeviceRowIndex}"
+										widgetVar="messagesDialog#{activeDeviceRowIndex}"
+										dynamic="false" header="Nachrichten (#{device.id})"
+										showEffect="fade" hideEffect="fade" modal="true" width="450px">
+										<h:outputLabel value="Verlauf:" />
+										<br></br>
+										<p:dataTable id="messagesTable" var="message"
+											emptyMessage="Keine gefunden.."
+											rowIndexVar="jobMessagesRowIndex" value="#{device.messages}"
+											scrollable="true" scrollHeight="150">
+
+											<p:column headerText="Zeit" style="width: 70px;">
+												<h:outputText value="#{message.date}">
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="Nachricht">
+												<h:outputText value="[#{message.from}]: " />
+												<h:outputText value="#{message.content} " />
+											</p:column>
+										</p:dataTable>
+										<br></br>
+										<p:focus for="newMessageField" />
+										<p:inputText id="newMessageField"
+											binding="#{messageFieldInput}"
+											style="width: 68%;" placeholder="Neue Nachricht.."
+											onkeypress="if (event.keyCode == 13) { return false; }">
+										</p:inputText>
+										&nbsp;
+										<p:commandButton id="sendMessageButton" value="Senden"
+											actionListener="#{messageDialogController.sendMessage(device, messageFieldInput.value)}"
+											update="@([id$=messagesTable])"
+											icon="fa fa-send">
+										</p:commandButton>
+									</p:dialog>
 								</p:column>
 							</p:dataTable>
 							<input type="hidden" name="${_csrf.parameterName}"

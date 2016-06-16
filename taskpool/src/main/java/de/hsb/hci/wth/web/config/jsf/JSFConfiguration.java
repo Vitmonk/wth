@@ -24,7 +24,8 @@ public class JSFConfiguration {
     public ServletContextInitializer servletContextInitializer() {
         return servletContext -> {
             servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString().toLowerCase());
-            servletContext.setInitParameter("primefaces.THEME", "bootstrap");
+            // servletContext.setInitParameter("primefaces.THEME", "bootstrap");
+            servletContext.setInitParameter("primefaces.THEME", "#{themeSwitcher.currentTheme}");
             servletContext.setInitParameter("primefaces.CLIENT_SIDE_VALIDATION", Boolean.TRUE.toString().toLowerCase());
             servletContext.setInitParameter("javax.faces.FACELETS_SKIP_COMMENTS", Boolean.TRUE.toString().toLowerCase());
             servletContext.setInitParameter("primefaces.FONT_AWESOME", Boolean.TRUE.toString().toLowerCase());

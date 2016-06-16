@@ -10,6 +10,7 @@ public class Device {
     private Job currentJob;
     private Date lastActive;
     private List<Message> messages = new ArrayList<>();
+    private boolean locked = false;
 
     public String getId() {
         return id;
@@ -41,6 +42,14 @@ public class Device {
 
     public void setMessages(List<Message> messages) {
         this.messages = messages;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
 }

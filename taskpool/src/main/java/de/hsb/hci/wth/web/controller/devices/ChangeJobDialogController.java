@@ -23,6 +23,7 @@ public class ChangeJobDialogController {
     private Device device = null;
     private Job currentlyChosenJob = null;
     private List<Job> openJobs = new ArrayList<>();
+    private String filterValue = "";
 
     @PostConstruct
     private void init() {
@@ -56,6 +57,14 @@ public class ChangeJobDialogController {
 
     public void setCurrentlyChosenJob(Job currentlyChosenJob) {
         this.currentlyChosenJob = currentlyChosenJob;
+    }
+
+    public String getFilterValue() {
+        return filterValue;
+    }
+
+    public void setFilterValue(String filterValue) {
+        this.filterValue = filterValue;
     }
 
 }

@@ -40,12 +40,12 @@
 									<p:overlayPanel id="myPanel" for="jobInfo"
 										showEvent="mouseover" hideEvent="mouseout" dynamic="true">
 										<h:outputText value="Beschreibung:"
-											style="text-decoration: underline;" />
+											style="text-decoration: underline; font-weight: bold;" />
 										<br></br>
 										<h:outputText value="#{job.description}" />
 										<br></br>
 										<h:outputText value="Aktuelle Unteraufgabe:"
-											style="text-decoration: underline;" />
+											style="text-decoration: underline; font-weight: bold;" />
 										<br></br>
 										<h:outputText value="#{jobHelper.getCurrentTask(job).name}" />
 									</p:overlayPanel>
