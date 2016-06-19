@@ -174,7 +174,7 @@
 											rendered="#{not job.locked}"
 											actionListener="#{job.setLocked(true)}"
 											update="@([id$=jobsTable])" icon="fa fa-lock">
-											<p:confirm header="Gerät #{job.name} sperren"
+											<p:confirm header="Aufgabe #{job.name} sperren"
 												message="Sind Sie sicher?" icon="ui-icon-alert" />
 										</p:commandButton>
 										<p:commandButton id="unlockJobButton"

@@ -99,9 +99,9 @@
 									</h:panelGroup>
 
 									<p:dialog id="changeJobDialog#{activeDeviceRowIndex}"
-										header="Aufgabe ändern (#{device.id})"
+										header="Aufgabe #{device.currentJob == null ? 'zuweisen' : 'ändern'} (#{device.id})"
 										widgetVar="changeJobDialog#{activeDeviceRowIndex}"
-										showEffect="fade" hideEffect="fade" modal="true" width="370px">
+										showEffect="fade" hideEffect="fade" modal="true" width="400px">
 										<h:outputLabel value="Verfügbare Aufgaben:" />
 										<br></br>
 										<br></br>
@@ -146,10 +146,10 @@
 											</f:facet>
 											<f:facet name="right">
 												<!-- TODO #{changeJobDialogController.changeJob()};  -->
-												<p:commandButton id="jobChooseButton" value="Ändern"
+												<p:commandButton id="jobChooseButton" value="#{device.currentJob == null ? 'Zuweisen' : 'Ändern'}"
 													disabled="#{changeJobDialogController.currentlyChosenJob eq null}"
 													onclick="PF('changeJobDialog#{activeDeviceRowIndex}').hide();"
-													icon="fa fa-exchange">
+													icon="fa #{device.currentJob == null ? 'fa-arrow-left' : 'fa-exchange'}">
 												</p:commandButton>
 											</f:facet>
 										</p:toolbar>
