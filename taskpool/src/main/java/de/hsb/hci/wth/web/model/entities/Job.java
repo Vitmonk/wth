@@ -1,6 +1,7 @@
 package de.hsb.hci.wth.web.model.entities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Job {
@@ -12,6 +13,7 @@ public class Job {
     private Device currentDevice;
     private List<Message> messages = new ArrayList<>();
     private boolean locked = false;
+    private Date creationDate;
 
     public Integer getId() {
         return id;
@@ -67,5 +69,13 @@ public class Job {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 }

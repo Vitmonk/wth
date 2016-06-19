@@ -9,6 +9,7 @@ public class Message {
     private String to;
     private Date date;
     private String content;
+    private boolean read = false;
 
     public Integer getId() {
         return id;
@@ -48,5 +49,13 @@ public class Message {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 }

@@ -56,18 +56,27 @@ public class DemoDB {
         job1.getMessages().add(messageJob1Device1);
         job1.getTasks().add(job1task1);
         job1.getTasks().add(job1task2);
+        job1.setCreationDate(new GregorianCalendar(
+                2016, Calendar.AUGUST, Calendar.MONDAY, 12, 10, 00)
+                        .getTime());
         jobs.add(job1);
 
         Job job2 = new Job();
         job2.setId(456);
         job2.setName("Qualitätskontrolle");
         job2.setDescription("Pakete mit Verschleißteilen sollen geprüft werden.");
+        job2.setCreationDate(new GregorianCalendar(
+                2016, Calendar.AUGUST, Calendar.JANUARY, 11, 20, 00)
+                        .getTime());
         jobs.add(job2);
 
         Job job3 = new Job();
         job3.setId(789);
         job3.setName("Inventur von Ware ABC");
         job3.setDescription("Bestand der Pakete mit Ware ABC soll geprüft werden.");
+        job3.setCreationDate(new GregorianCalendar(
+                2016, Calendar.AUGUST, Calendar.APRIL, 18, 40, 00)
+                        .getTime());
         jobs.add(job3);
 
         Message messageJob4Device4 = new Message();
@@ -77,6 +86,7 @@ public class DemoDB {
                 2016, Calendar.AUGUST, Calendar.TUESDAY, 12, 12, 00)
                         .getTime());
         messageJob4Device4.setContent("Hallo Sie müssen arbeiten..");
+        messageJob4Device4.setRead(true);
 
         Task job4task1 = new Task();
         job4task1.setCompleted(true);
@@ -90,12 +100,15 @@ public class DemoDB {
         job4task2.setDescription("Kiste XYZ in den Transporter in der Halle AC1 legen.");
 
         Job job4 = new Job();
-        job4.setId(123);
+        job4.setId(321);
         job4.setName("Transportvorbereitung XYZ");
         job4.setDescription("Kiste XYZ mit Ersatzteilen Serie 800 soll zum Transporter gebracht werden.");
         job4.getMessages().add(messageJob4Device4);
         job4.getTasks().add(job4task1);
         job4.getTasks().add(job4task2);
+        job4.setCreationDate(new GregorianCalendar(
+                2016, Calendar.AUGUST, Calendar.TUESDAY, 8, 10, 00)
+                        .getTime());
         jobs.add(job4);
 
         Device device1 = new Device();
@@ -142,12 +155,17 @@ public class DemoDB {
     }
 
     private void createDummyEntries() {
+        Random random = new Random();
         // Free
         for (int i = 0; i < AMOUNT_OF_DUMMY_ENTRIES; i++) {
             Job job = new Job();
             job.setId(300 + i);
             job.setName("Aufgabe " + 300 + i);
             job.setDescription("Beschreibung A" + 300 + i);
+            job.setCreationDate(new GregorianCalendar(
+                    2016, Calendar.AUGUST, Calendar.TUESDAY,
+                    random.nextInt(24), random.nextInt(60), random.nextInt(60))
+                            .getTime());
             Task task = new Task();
             task.setName("Let us dance =)");
             task.setDescription("Unteraufgabe von Aufgabe " + 300 + i);
@@ -157,7 +175,6 @@ public class DemoDB {
 
             Device device = new Device();
             device.setId("WRK" + 300 + i);
-            Random random = new Random();
             device.setLastActive(new GregorianCalendar(
                     2016, Calendar.AUGUST, Calendar.TUESDAY,
                     random.nextInt(24), random.nextInt(60), random.nextInt(60))
@@ -170,6 +187,10 @@ public class DemoDB {
             job.setId(400 + i);
             job.setName("Aufgabe " + 400 + i);
             job.setDescription("Beschreibung A" + 400 + i);
+            job.setCreationDate(new GregorianCalendar(
+                    2016, Calendar.AUGUST, Calendar.TUESDAY,
+                    random.nextInt(24), random.nextInt(60), random.nextInt(60))
+                            .getTime());
             Task task = new Task();
             task.setName("Let us dance =)");
             task.setDescription("Unteraufgabe von Aufgabe " + 400 + i);
@@ -179,7 +200,6 @@ public class DemoDB {
 
             Device device = new Device();
             device.setId("WRK" + 400 + i);
-            Random random = new Random();
             device.setLastActive(new GregorianCalendar(
                     2016, Calendar.AUGUST, Calendar.TUESDAY,
                     random.nextInt(24), random.nextInt(60), random.nextInt(60))

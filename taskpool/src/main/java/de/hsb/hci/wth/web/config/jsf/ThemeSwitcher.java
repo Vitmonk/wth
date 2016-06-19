@@ -3,13 +3,13 @@ package de.hsb.hci.wth.web.config.jsf;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
+import javax.faces.view.ViewScoped;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-@ApplicationScoped
+@ViewScoped
 public class ThemeSwitcher {
 
     @Autowired

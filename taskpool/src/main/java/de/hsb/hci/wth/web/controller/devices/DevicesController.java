@@ -24,7 +24,6 @@ public class DevicesController {
     @PostConstruct
     private void init() {
         activeDevices = deviceRepository.getAllDevices().stream()
-                .filter(device -> device.getCurrentJob() != null)
                 .collect(Collectors.toList());
     }
 

@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<h:body>
+	<ui:composition template="../layout.xhtml">
+		<ui:define name="content">
+			<div class="well well-lg">
+
+				<p:fieldset legend="Aufgabenliste">
+					<p:panelGrid columns="1" layout="grid">
+						<h:form id="jobsForm">
+							<p:dataTable var="job" filterDelay="300" id="jobsTable"
+								widgetVar="jobsTable" value="#{jobsController.allJobs}"
+								emptyMessage="Keine gefunden.." styleClass="jobsTable" rows="10"
+								paginator="true" paginatorPosition="bottom"
+								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+								rowsPerPageTemplate="10,25,50" rowIndexVar="jobRowIndex">
+								<f:facet name="header">
+						            Aufgabenliste
+						        </f:facet>
+								<p:column headerText="Id" filterBy="#{job.id}"
+									filterStyle="width: 80%;" sortBy="#{job.id}" width="50">
+									<center>
+										<h:outputText value="#{job.id}" />
+									</center>
+								</p:column>
+								<p:column headerText="Name" sortBy="#{job.name}"
+									filterBy="#{job.name}" filterMatchMode="contains">
+									<center>
+										<h:outputText value="#{job.name}" />
+										&nbsp;
+										<h:outputLabel styleClass="fa fa-warning"
+											rendered="#{job.locked}"
+											title="Aufgabe ist zur Zeit gesperrt!"></h:outputLabel>
+										&nbsp;
+										<h:outputLabel styleClass="fa fa-warning"
+											rendered="#{job.currentDevice.locked}"
+											title="Gerät ist zur Zeit gesperrt!"></h:outputLabel>
+									</center>
+								</p:column>
+								<p:column headerText="Erstelldatum"
+									filterBy="#{job.creationDate}" sortBy="#{job.creationDate}">
+									<f:facet name="filter">
+										<p:calendar pattern="dd/MM/yyyy" placeholder="dd/MM/yyyy">
+											<p:ajax event="dateSelect"
+												oncomplete="PF('jobsTable').filter()" />
+										</p:calendar>
+									</f:facet>
+									<center>
+										<h:outputText value="#{job.creationDate}">
+											<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+										</h:outputText>
+									</center>
+								</p:column>
+								<p:column headerText="Beschreibung"
+									filterBy="#{job.description}" filterMatchMode="contains"
+									sortBy="#{job.description}">
+									<center>
+										<h:outputText value="#{job.description}" />
+										<h:outputLabel icon="fa fa-plus" />
+									</center>
+								</p:column>
+								<p:column headerText="Gerät / Zustand"
+									sortBy="#{jobHelper.getProgress(job)}">
+									<center>
+										<h:outputText value="#{job.currentDevice.id} " rendered="#{job.currentDevice != null}" />
+										<h:outputText value=" - " rendered="#{job.currentDevice == null}" />
+										<h:outputText value=" / "/>
+										<h:outputText value="(#{jobHelper.getProgress(job)}%) " />
+										<h:outputText id="jobInfoTable"
+											styleClass="fa fa-info-circle jobInfoIcon#{jobRowIndex}">
+										</h:outputText>
+										&nbsp;
+										<p:commandButton id="deviceChange" title="Gerät ändern"
+											rendered="#{job.currentDevice != null}"
+											onclick="PF('changeDeviceDialog#{jobRowIndex}').show(); #{changeDeviceDialogController.setJob(job)};"
+											icon="fa fa-exchange"
+											styleClass=" deviceChangeIcon#{jobRowIndex}">
+										</p:commandButton>
+										<p:commandButton id="deviceAssign" title="Gerät zuweisen"
+											rendered="#{job.currentDevice == null}"
+											onclick="PF('changeDeviceDialog#{jobRowIndex}').show(); #{changeDeviceDialogController.setJob(job)};"
+											icon="fa fa-arrow-left"
+											styleClass=" deviceChangeIcon#{jobRowIndex}">
+										</p:commandButton>
+									</center>
+
+									<p:overlayPanel id="jobInfoTableOverlayPanel"
+										for="jobInfoTable" showEvent="mouseover" hideEvent="mouseout"
+										showEffect="fade" hideEffect="fade" dynamic="true">
+										<h:outputText value="Aktuelle Unteraufgabe:"
+											style="text-decoration: underline; font-weight: bold;" />
+										<br></br>
+										<h:outputText value="#{jobHelper.getCurrentTask(job).name}" />
+									</p:overlayPanel>
+
+									<p:dialog id="changeDeviceDialog#{jobRowIndex}"
+										header="Gerät #{job.currentDevice != null ? 'ändern' : 'zuweisen'} (#{job.id})"
+										widgetVar="changeDeviceDialog#{jobRowIndex}" showEffect="fade"
+										hideEffect="fade" modal="true" width="370px">
+										<h:outputLabel value="Geräte ohne Aufgabe:" />
+										<br></br>
+										<br></br>
+										<p:dataTable id="freeDevicesTable#{jobRowIndex}"
+											widgetVar="freeDevicesTable#{jobRowIndex}" var="freeDevice"
+											selectionMode="single"
+											selection="#{changeDeviceDialogController.currentlyChosenDevice}"
+											rowKey="#{freeDevice.id}" emptyMessage="Keine gefunden.."
+											rowIndexVar="freeDeviceRowIndex"
+											value="#{changeDeviceDialogController.freeDevices}"
+											scrollable="true" scrollHeight="150">
+
+											<p:ajax event="rowSelect"
+												update="@([id$=deviceChooseButton])" />
+
+											<p:column id="freeDeviceIdColumn" filterBy="#{freeDevice.id}"
+												filterMatchMode="contains">
+												<f:facet name="filter">
+													<p:inputText id="freeDeviceIdColumnFilter"
+														style="width: 98%; float: left;"
+														onkeyup="PF('freeDevicesTable#{jobRowIndex}').filter();"
+														placeholder="Suche nach Id..">
+													</p:inputText>
+												</f:facet>
+												<h:outputText value="#{freeDevice.id}" style="font-weight: bold;"/>
+												<div style="font-size: 85%;">
+													<h:outputText value=" (" />
+													<h:outputText value="#{freeDevice.lastActive}">
+														<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+													</h:outputText>
+													<h:outputText value=")*" />
+												</div>
+											</p:column>
+										</p:dataTable>
+										<br></br>
+										<p:toolbar>
+											<f:facet name="left">
+												<!-- TODO remove device -->
+												<p:commandButton id="deviceFreeButton"
+													widgetVar="deviceFreeButtonWidget"
+													value="Aktuelles Gerät befreien"
+													onclick="PF('changeDeviceDialog#{jobRowIndex}').hide();"
+													icon="fa fa-trash">
+												</p:commandButton>
+											</f:facet>
+											<f:facet name="right">
+												<!-- TODO #{changeDeviceDialogController.changeDevice()};  -->
+												<p:commandButton id="deviceChooseButton" value="#{job.currentDevice != null ? 'Ändern' : 'Zuweisen'}"
+													disabled="#{changeDeviceDialogController.currentlyChosenDevice eq null}"
+													onclick="PF('changeDeviceDialog#{jobRowIndex}').hide();"
+													icon="fa #{job.currentDevice == null ? 'fa-arrow-left' : 'fa-exchange'}">
+												</p:commandButton>
+											</f:facet>
+										</p:toolbar>
+										<h:outputText value="* letzte Aktivitätszeit" />
+									</p:dialog>
+
+								</p:column>
+								<p:column headerText="Weitere Aktionen" width="100">
+									<center>
+										<p:commandButton id="openChatButton"
+											rendered="#{job.currentDevice != null}"
+											title="Nachrichten anzeigen"
+											onclick="PF('messagesDialog#{jobRowIndex}').show();"
+											icon="fa fa-wechat">
+										</p:commandButton>
+										<p:commandButton id="lockJobButton" title="Aufgabe sperren"
+											rendered="#{not job.locked}"
+											actionListener="#{job.setLocked(true)}"
+											update="@([id$=jobsTable])" icon="fa fa-lock">
+											<p:confirm header="Gerät #{job.name} sperren"
+												message="Sind Sie sicher?" icon="ui-icon-alert" />
+										</p:commandButton>
+										<p:commandButton id="unlockJobButton"
+											title="Aufgabe entsperren" rendered="#{job.locked}"
+											actionListener="#{job.setLocked(false)}"
+											update="@([id$=jobsTable])" icon="fa fa-unlock">
+										</p:commandButton>
+									</center>
+									<p:confirmDialog global="true" showEffect="fade"
+										hideEffect="fade">
+										<p:commandButton value="Ja" type="button"
+											styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+										<p:commandButton value="Nein" type="button"
+											styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+									</p:confirmDialog>
+									<p:dialog id="messagesDialog#{jobRowIndex}"
+										widgetVar="messagesDialog#{jobRowIndex}"
+										dynamic="false" header="Nachrichten (#{job.currentDevice.id} / #{job.id})"
+										showEffect="fade" hideEffect="fade" modal="true" width="450px">
+										<h:outputLabel value="Verlauf:" />
+										<br></br>
+										<p:dataTable id="messagesTable" var="message"
+											emptyMessage="Keine gefunden.."
+											rowIndexVar="jobMessagesRowIndex" value="#{job.currentDevice.messages}"
+											scrollable="true" scrollHeight="150">
+
+											<p:column headerText="Zeit" style="width: 70px;">
+												<h:outputText value="#{message.date}">
+													<f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+												</h:outputText>
+											</p:column>
+											<p:column headerText="Nachricht">
+												<h:outputText value="[#{message.from}]: " />
+												<h:outputText value="#{message.content} " />
+											</p:column>
+										</p:dataTable>
+										<br></br>
+										<p:focus for="newMessageField" />
+										<p:inputText id="newMessageField"
+											binding="#{messageFieldInput}" style="width: 68%;"
+											placeholder="Neue Nachricht.."
+											onkeypress="if (event.keyCode == 13) { return false; }">
+										</p:inputText>
+										&nbsp;
+										<p:commandButton id="sendMessageButton" value="Senden"
+											actionListener="#{messageDialogController.sendMessage(job.currentDevice, messageFieldInput.value)}"
+											update="@([id$=messagesTable])" icon="fa fa-send">
+										</p:commandButton>
+									</p:dialog>
+								</p:column>
+							</p:dataTable>
+							<input type="hidden" name="${_csrf.parameterName}"
+								value="${_csrf.token}" />
+						</h:form>
+					</p:panelGrid>
+				</p:fieldset>
+			</div>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

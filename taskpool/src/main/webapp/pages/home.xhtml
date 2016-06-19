@@ -16,29 +16,51 @@
 					<p:panelGrid columns="2" layout="grid">
 						<h:form>
 							<p:dataTable var="job" value="#{overviewController.activeJobs}"
-								styleClass="activeJobsTable" rows="10" paginator="true" paginatorPosition="bottom"
+								styleClass="activeJobsTable" rows="10" paginator="true"
+								paginatorPosition="bottom"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-								rowsPerPageTemplate="5,10,15" rowIndexVar="activeJobRowIndex"
-								style="margin-bottom:40px">
+								rowsPerPageTemplate="5,10,15" rowIndexVar="activeJobRowIndex">
 								<f:facet name="header">
 						            Laufende Aufgaben
-						        </f:facet>
+						            <h:outputText
+										value="(#{overviewController.activeJobs.size()})" />
+								</f:facet>
+
+								<p:column headerText="Id" sortBy="#{job.id}" width="40">
+									<center>
+										<h:outputText value="#{job.id}" />
+									</center>
+								</p:column>
+
 								<p:column headerText="Name" sortBy="#{job.name}">
-									<h:outputText value="#{job.name}" />
+									<center>
+										<h:outputText value="#{job.name}" />
+									</center>
+									<!-- <h:outputText styleClass="fa fa-child" title="Ungelesene Nachrichten vorhanden"
+									rendered="#{messageHelper.hasUnreadedMessages(job)}"  /> -->
 								</p:column>
 
 								<p:column headerText="Gerät" sortBy="#{job.currentDevice.id}">
-									<h:outputText value="#{job.currentDevice.id}" />
+									<center>
+										<h:outputText value="#{job.currentDevice.id}" />
+									</center>
 								</p:column>
 
 								<p:column headerText="Zustand"
 									sortBy="#{jobHelper.getProgress(job)}">
-									<h:outputText value="#{jobHelper.getProgress(job)} % " />
-									<h:outputText id="jobInfo"
-										styleClass="fa fa-info-circle jobInfoIcon#{activeJobRowIndex}">
-									</h:outputText>
+									<center>
+										<h:outputText value="#{jobHelper.getProgress(job)} % " />
+										<h:outputText id="jobInfo"
+											styleClass="fa fa-info-circle jobInfoIcon#{activeJobRowIndex}">
+										</h:outputText>
+									</center>
 									<p:overlayPanel id="myPanel" for="jobInfo"
 										showEvent="mouseover" hideEvent="mouseout" dynamic="true">
+										<h:outputText value="Id:"
+											style="text-decoration: underline; font-weight: bold;" />
+										<br></br>
+										<h:outputText value="#{job.id}" />
+										<br></br>
 										<h:outputText value="Beschreibung:"
 											style="text-decoration: underline; font-weight: bold;" />
 										<br></br>
@@ -70,18 +92,30 @@
 							<p:dataTable var="job" value="#{overviewController.openJobs}"
 								rows="10" paginator="true" paginatorPosition="bottom"
 								paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-								rowsPerPageTemplate="5,10,15"
-								style="margin-bottom:40px">
+								rowsPerPageTemplate="5,10,15">
 								<f:facet name="header">
 						            Verfügbare Aufgaben
-						        </f:facet>
+						            <h:outputText
+										value="(#{overviewController.openJobs.size()})" />
+								</f:facet>
+
+								<p:column headerText="Id" sortBy="#{job.id}" width="40">
+									<center>
+										<h:outputText value="#{job.id}" />
+									</center>
+								</p:column>
+
 								<p:column headerText="Name" sortBy="#{job.name}">
-									<h:outputText value="#{job.name}" />
+									<center>
+										<h:outputText value="#{job.name}" />
+									</center>
 								</p:column>
 
 								<p:column headerText="Beschreibung" sortBy="#{job.description}">
-									<h:outputText value="#{job.description}" />
-									<h:outputLabel icon="fa fa-plus" />
+									<center>
+										<h:outputText value="#{job.description}" />
+										<h:outputLabel icon="fa fa-plus" />
+									</center>
 								</p:column>
 							</p:dataTable>
 							<input type="hidden" name="${_csrf.parameterName}"
